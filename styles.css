@@ -11,6 +11,10 @@ body {
 .dashboard {
   max-width: 500px;
   margin: 0 auto;
+  padding: 16px;            /* breathing room on small screens */
+  gap: 12px;
+  display: flex;
+  flex-direction: column;
 }
 
 .dark-mode {
@@ -26,6 +30,11 @@ body {
   --marker-glow: 0 0 0 rgba(0,0,0,0);
   --progress-label-color: #333333; /* default label color for light theme */
   --emoji-size: 1em; /* adjust to taste: 0.9em, 1.1em, etc. */
+  --qa-btn-bg: #fff;
+  --qa-btn-border: rgba(0,0,0,0.06);
+  --qa-btn-color: #222;
+  --qa-btn-bg-dark: #222;
+  --qa-btn-color-dark: #e0e0e0;
 }
 
 .dark-mode{
@@ -92,7 +101,7 @@ body {
   height: 30px;
   border-radius: 15px;
   overflow: hidden;
-  margin: 20px 0;
+  margin: 12px 0;
   position: relative;
 }
 
@@ -179,6 +188,10 @@ body {
   margin: 10px 0;
   color: #2c3e50;
   font-weight: bold;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  text-align: center;
+  /* subtle spacing around the reset date */
 }
 
 .notification {
@@ -275,35 +288,102 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-margin-bottom: 6px; 
   padding: 6px 8px;
   border-radius: 6px;
   background: rgba(0,0,0,0.04);
   color: inherit;
   border: 1px solid rgba(0,0,0,0.06);
   font-size: 13px;
+  flex-direction: row;   /* default: buttons in a row */
+  flex-wrap: wrap;
 }
-.dark-mode .quick-adjust-inline {
-  background: rgba(255,255,255,0.03);
+
+/* Quick-adjust: center buttons and put manual edit panel below them */
+.quick-adjust-inline {
+  display: flex;
+  flex-direction: column;   /* buttons above, edit panel below */
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  width: 100%;
+  max-width: 360px;         /* keep compact on wide screens */
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* Buttons row stays centered */
+.qa-buttons-inline {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Shared button sizing & colors (uses variables already defined in :root) */
+:root {
+  --qa-btn-padding: 8px 12px;
+  --qa-btn-height: 40px;
+  --qa-btn-font-size: 14px;
+}
+
+.quick-adjust-inline .qa-buttons-inline button,
+.quick-adjust-inline .qa-edit button {
+  background: var(--qa-btn-bg);
+  color: var(--qa-btn-color);
+  border: 1px solid var(--qa-btn-border);
+  padding: var(--qa-btn-padding);
+  height: var(--qa-btn-height);
+  min-width: 56px;
+  font-size: var(--qa-btn-font-size);
+  border-radius: 8px;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+/* dark mode button colors */
+.dark-mode .quick-adjust-inline .qa-buttons-inline button,
+.dark-mode .quick-adjust-inline .qa-edit button {
+  background: var(--qa-btn-bg-dark);
+  color: var(--qa-btn-color-dark);
   border-color: rgba(255,255,255,0.04);
 }
 
-.qa-display-inline { font-weight:600; margin-right:6px; }
-.qa-buttons-inline { display:flex; gap:6px; align-items:center; }
-.qa-buttons-inline button {
-  padding:3px 6px;
-  border-radius:4px;
-  border:1px solid rgba(0,0,0,0.06);
-  background: #fff;
-  cursor: pointer;
-  font-size:12px;
-}
-.dark-mode .qa-buttons-inline button {
-  background:#222;
-  color:#e0e0e0;
-  border-color:rgba(255,255,255,0.04);
+/* Make inputs visually match buttons (height, padding, font-size) */
+.quick-adjust-inline .qa-edit input {
+  background: var(--qa-btn-bg);
+  color: var(--qa-btn-color);
+  border: 1px solid var(--qa-btn-border);
+  height: var(--qa-btn-height);
+  padding: 0 10px;
+  font-size: var(--qa-btn-font-size);
+  border-radius: 8px;
+  box-sizing: border-box;
 }
 
+/* dark mode override for inputs */
+.dark-mode .quick-adjust-inline .qa-edit input {
+  background: var(--qa-btn-bg-dark);
+  color: var(--qa-btn-color-dark);
+  border-color: rgba(255,255,255,0.04);
+}
+
+/* Ensure edit panel sits below and spans full width of the quick-adjust container */
+.quick-adjust-inline .qa-edit {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* On small screens keep spacing and full width */
+@media (max-width: 480px) {
+  .quick-adjust-inline { max-width: 100%; padding: 10px; }
+  .quick-adjust-inline .qa-edit input { width: 46%; min-width: 120px; }
+  .quick-adjust-inline .qa-buttons-inline button { min-width: 52px; }
+}
+  
 /* Ensure twemoji images match the surrounding text */
 :root { --emoji-size: 1em; }
 img.emoji, .emoji {
@@ -312,4 +392,85 @@ img.emoji, .emoji {
   display: inline-block;
   vertical-align: -0.12em;
   object-fit: contain;
+}
+
+/* improve spacing & mobile layout */
+.dashboard {
+  padding: 16px;            /* breathing room on small screens */
+  gap: 12px;
+  display: flex;
+  flex-direction: column;
+} */
+
+/* space between top controls (buttons) and reset date */
+.top-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+} 
+
+/* make buttons easier to tap, consistent size */
+button {
+  padding: 10px 12px;
+  min-height: 44px;        /* touch target guideline */
+  border-radius: 8px;
+  font-size: 14px;
+} 
+
+/* group used/remaining and add gap */
+.stats-row {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 8px 0;
+} 
+
+/* stacked stats (Used above, Remaining below) */
+.stats-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 6px;
+}
+
+/* subtle spacing around the reset date */
+#resetDateDisplay {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  text-align: center;
+  font-weight: 600;
+} 
+
+/* ensure progress area has breathing room */
+.progress-container {
+  margin: 12px 0;
+}
+
+/* Quick-adjust block spacing */
+.quick-adjust-inline {
+  padding: 8px 10px;
+  gap: 8px;
+} 
+
+/* ensure hidden attribute actually hides the panel */
+.qa-edit[hidden] { display: none !important; }
+
+/* Responsive rules: stack and enlarge for small screens */
+@media (max-width: 480px) {
+  .top-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .stats-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .progress-label { font-size: 13px; }
+  button { font-size: 15px; padding: 12px; }
+  .dashboard { padding: 12px; }
 }

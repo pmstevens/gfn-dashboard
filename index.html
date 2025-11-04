@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>GeForce Now Dashboard</title>
 
   <!-- PWA manifest -->
@@ -15,14 +16,17 @@
     <!-- Error Message -->
     <div id="errorMessage" class="error-message"></div>
 
-    <!-- Dark Mode Toggle -->
-    <button id="darkModeToggle" class="dark-mode-toggle">🌙 Dark Mode</button>
+    <!-- top controls: buttons grouped for spacing on mobile -->
+    <div class="top-controls">
+      <!-- Dark Mode Toggle -->
+      <button id="darkModeToggle" class="dark-mode-toggle">🌙 Dark Mode</button>
 
-    <!-- Show Advanced Settings Button -->
-    <button id="showAdvanced" class="advanced-button">⚙️ Show Advanced Settings</button>
+      <!-- Show Advanced Settings Button -->
+      <button id="showAdvanced" class="advanced-button">⚙️ Show Advanced Settings</button>
 
-    <!-- Clear All Button -->
-    <button id="clearAll" class="clear-button">🗑️ Clear All</button>
+      <!-- Clear All Button -->
+      <button id="clearAll" class="clear-button">🗑️ Clear All</button>
+    </div>
 
     <!-- Input Fields -->
     <div class="inputs" id="advancedSettings">
@@ -61,11 +65,12 @@
       <div class="progress-label" id="progressLabel">0%</div>
     </div>
 
-    <!-- Used Time -->
-    <div class="time-display" id="usedTime">✅ Used: 20h 35m</div>
+    <!-- stats: Used above, Remaining (with quick-adjust) below -->
+    <div class="stats-row">
+      <div class="time-display" id="usedTime">✅ Used: 20h 35m</div>
+    </div>
 
-    <!-- Remaining Time -->
-    <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+    <div class="stats-column">
       <div class="time-display" id="remainingTime">⏳ Remaining: 94h 25m</div>
 
       <!-- Quick adjust (inline, sits below Remaining Time) -->
@@ -78,10 +83,10 @@
           <button id="qaEdit" title="Edit remaining">✎</button>
         </div>
         <div id="qaEditPanel" class="qa-edit" hidden>
-          <input id="qaHours" type="number" min="0" placeholder="h" aria-label="hours" />
+          <input id="qaHours" type="number" min="0" placeholder="h" aria-label="hours" /> 
           <input id="qaMinutes" type="number" min="0" max="59" placeholder="m" aria-label="minutes" />
           <button id="qaSave">Save</button>
-          <button id="qaCancel">Cancel</button>
+          <button id="qaCancel" type="button">Cancel</button>
         </div>
       </div>
     </div>

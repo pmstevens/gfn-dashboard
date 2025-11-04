@@ -10,6 +10,9 @@ let _undoStack = [];
 const _UNDO_LIMIT = 20;
 let _suppressUndoPush = false;
 
+// guard to ensure quick-adjust is initialized only once
+window._quickAdjustInited = window._quickAdjustInited || false;
+
 function saveToLocalStorage() {
   try {
     const totalHours = document.getElementById("totalHours").value;
@@ -155,7 +158,11 @@ function updateDashboard() {
     resetDate = getNextResetDate();
   }
 
-  document.getElementById("resetDateDisplay").textContent = `📅 Reset Date: ${resetDate.toISOString().split('T')[0]}`;
+const rdd = document.getElementById("resetDateDisplay");
+if (rdd) {
+    const displayDate = resetDate.toLocaleDateString(); // uses browser locale (e.g. "04/11/2025" for UK)
+    rdd.textContent = `📅 Reset Date: ${displayDate}`;
+}
 
   // Check for reset date change
   const previousResetDate = localStorage.getItem("previousResetDate");
@@ -383,6 +390,9 @@ function setRemainingFromMinutes(totalMinutes) {
 
 // attach handlers (call this during initialization)
 function initQuickAdjust() {
+  if (window._quickAdjustInited) return;
+  window._quickAdjustInited = true;
+
   const plus30 = document.getElementById("qaPlus30");
   const plus60 = document.getElementById("qaPlus60");
   const minus30 = document.getElementById("qaMinus30");
@@ -404,12 +414,10 @@ function initQuickAdjust() {
     panel.hidden = false;
     const mins = getCurrentRemainingMinutes();
     const t = _normalizeRemaining(mins);
-    qaHours.value = t.hours;
-    qaMinutes.value = t.minutes;
-    qaHours.focus();
+    if (qaHours) qaHours.value = t.hours;
+    if (qaMinutes) qaMinutes.value = t.minutes;
+    if (qaHours) qaHours.focus();
   });
-
-  if (cancel) cancel.addEventListener("click", () => { if (panel) panel.hidden = true; });
 
   if (save) save.addEventListener("click", () => {
     const h = Math.max(0, parseInt(qaHours.value) || 0);
@@ -418,63 +426,16 @@ function initQuickAdjust() {
     if (panel) panel.hidden = true;
   });
 
-  // initial display
-  updateQuickAdjustDisplay();
-
-  // Keyboard shortcuts for quick adjust (registered once)
-  document.addEventListener("keydown", (e) => {
-    // don't trigger while typing in inputs
-    const active = document.activeElement;
-    if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA" || active.isContentEditable)) {
-      // allow Ctrl+Z undo even when typing
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
-        e.preventDefault();
-        undo();
-      }
-      return;
-    }
-
-    // Ctrl+Shift+1..4 for quick adjust:
-    if (e.ctrlKey && e.shiftKey && !e.altKey) {
-      switch (e.key) {
-        case "1": // -1h
-          e.preventDefault();
-          setRemainingFromMinutes(getCurrentRemainingMinutes() - 60);
-          return;
-        case "2": // -30m
-          e.preventDefault();
-          setRemainingFromMinutes(getCurrentRemainingMinutes() - 30);
-          return;
-        case "3": // +30m
-          e.preventDefault();
-          setRemainingFromMinutes(getCurrentRemainingMinutes() + 30);
-          return;
-        case "4": // +1h
-          e.preventDefault();
-          setRemainingFromMinutes(getCurrentRemainingMinutes() + 60);
-          return;
-        case "e": // open edit panel
-        case "E":
-          e.preventDefault();
-          if (panel) {
-            panel.hidden = false;
-            const mins = getCurrentRemainingMinutes();
-            const t = _normalizeRemaining(mins);
-            qaHours.value = t.hours;
-            qaMinutes.value = t.minutes;
-            qaHours.focus();
-          }
-          return;
-      }
-    }
-
-    // Ctrl+Z / Cmd+Z for undo
-    if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && e.key.toLowerCase() === "z") {
-      e.preventDefault();
-      undo();
-    }
+  if (cancel) cancel.addEventListener("click", (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    if (panel) panel.hidden = true;
   });
 }
+
+// call init once DOM is ready (if not already)
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof initQuickAdjust === 'function') initQuickAdjust();
+});
 
 // Attach UI handlers after DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
