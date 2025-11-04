@@ -11,55 +11,47 @@ const _UNDO_LIMIT = 20;
 let _suppressUndoPush = false;
 
 function saveToLocalStorage() {
-  const totalHours = document.getElementById("totalHours").value;
-  const totalMinutes = document.getElementById("totalMinutes").value;
-  const remainingHours = document.getElementById("remainingHours").value;
-  const remainingMinutes = document.getElementById("remainingMinutes").value;
-  const manualReset = document.getElementById("manualResetToggle").checked;
-  const resetDay = document.getElementById("resetDay").value;
-  const resetDate = document.getElementById("resetDate").value;
-  const isDarkMode = document.body.classList.contains("dark-mode");
+  try {
+    const totalHours = document.getElementById("totalHours").value;
+    const remainingHours = document.getElementById("remainingHours").value;
+    const remainingMinutes = document.getElementById("remainingMinutes").value;
+    const manualReset = document.getElementById("manualResetToggle")?.checked;
+    const resetDay = document.getElementById("resetDay")?.value;
+    const resetDate = document.getElementById("resetDate")?.value;
+    const isDarkMode = document.body.classList.contains("dark-mode");
 
-  localStorage.setItem("totalHours", totalHours);
-  localStorage.setItem("totalMinutes", totalMinutes);
-  localStorage.setItem("remainingHours", remainingHours);
-  localStorage.setItem("remainingMinutes", remainingMinutes);
-  localStorage.setItem("manualReset", manualReset);
-  localStorage.setItem("resetDay", resetDay);
-  localStorage.setItem("resetDate", resetDate);
-  localStorage.setItem("darkMode", isDarkMode);
-  localStorage.setItem("previousResetDate", resetDate); // Save previous reset date
+    localStorage.setItem("totalHours", totalHours);
+    // removed: totalMinutes
+    localStorage.setItem("remainingHours", remainingHours);
+    localStorage.setItem("remainingMinutes", remainingMinutes);
+    localStorage.setItem("manualReset", manualReset);
+    localStorage.setItem("resetDay", resetDay);
+    localStorage.setItem("resetDate", resetDate);
+    localStorage.setItem("darkMode", isDarkMode);
+  } catch (err) {
+    console.error('saveToLocalStorage error', err);
+  }
 }
 
 function loadFromLocalStorage() {
-  const totalHours = localStorage.getItem("totalHours");
-  const totalMinutes = localStorage.getItem("totalMinutes");
-  const remainingHours = localStorage.getItem("remainingHours");
-  const remainingMinutes = localStorage.getItem("remainingMinutes");
-  const manualReset = localStorage.getItem("manualReset") === "true";
-  const resetDay = localStorage.getItem("resetDay");
-  const resetDate = localStorage.getItem("resetDate");
-  const isDarkMode = localStorage.getItem("darkMode") === "true";
-
-  if (totalHours) document.getElementById("totalHours").value = totalHours;
-  if (totalMinutes) document.getElementById("totalMinutes").value = totalMinutes;
-  if (remainingHours) document.getElementById("remainingHours").value = remainingHours;
-  if (remainingMinutes) document.getElementById("remainingMinutes").value = remainingMinutes;
-  if (manualReset !== null) document.getElementById("manualResetToggle").checked = manualReset;
-  if (resetDay) document.getElementById("resetDay").value = resetDay;
-  if (resetDate) document.getElementById("resetDate").value = resetDate;
-
-  if (isDarkMode) {
-    document.body.classList.add("dark-mode");
-    document.querySelectorAll(".inputs input").forEach(input => {
-      input.classList.add("dark-mode");
-    });
-  }
-
-  // Show advanced settings if previously enabled
-  if (manualReset) {
-    document.getElementById("advancedSettings").style.display = "block";
-    document.getElementById("showAdvanced").textContent = "⚙️ Hide Advanced Settings";
+  try {
+    const th = localStorage.getItem("totalHours");
+    if (th !== null) document.getElementById("totalHours").value = th;
+    // removed: totalMinutes loading
+    const rh = localStorage.getItem("remainingHours");
+    if (rh !== null) document.getElementById("remainingHours").value = rh;
+    const rm = localStorage.getItem("remainingMinutes");
+    if (rm !== null) document.getElementById("remainingMinutes").value = rm;
+    const manual = localStorage.getItem("manualReset");
+    if (manual !== null) document.getElementById("manualResetToggle").checked = (manual === 'true');
+    const rd = localStorage.getItem("resetDate");
+    if (rd) document.getElementById("resetDate").value = rd;
+    const rday = localStorage.getItem("resetDay");
+    if (rday) document.getElementById("resetDay").value = rday;
+    const dm = localStorage.getItem("darkMode");
+    if (dm === 'true') document.body.classList.add('dark-mode');
+  } catch (err) {
+    console.error('loadFromLocalStorage error', err);
   }
 }
 
@@ -86,6 +78,24 @@ function getNextResetDate() {
 }
 
 function updateDashboard() {
+  // Safely get inputs (avoid throwing when elements are missing)
+  const totalHoursEl = document.getElementById("totalHours");
+  const remainingHoursEl = document.getElementById("remainingHours");
+  const remainingMinutesEl = document.getElementById("remainingMinutes");
+
+  if (!totalHoursEl || !remainingHoursEl || !remainingMinutesEl) {
+    console.warn("updateDashboard: missing required input elements", {
+      totalHours: !!totalHoursEl,
+      remainingHours: !!remainingHoursEl,
+      remainingMinutes: !!remainingMinutesEl
+    });
+    // Nothing to update — bail out early to avoid the TypeError.
+    return;
+  }
+
+  // Defer parsing into named variables later to avoid duplicate declarations
+  // (variables like `total` and `remaining` are declared further below).
+
   // Clear previous error and notification
   document.getElementById("errorMessage").style.display = "none";
   document.getElementById("errorMessage").textContent = "";
@@ -94,7 +104,8 @@ function updateDashboard() {
 
   // Get input values
   const totalHours = parseFloat(document.getElementById("totalHours").value) || 0;
-  const totalMinutes = parseFloat(document.getElementById("totalMinutes").value) || 0;
+  //const totalMinutes = parseFloat(document.getElementById("totalMinutes").value) || 0;
+  const totalMinutes = 0;
   const remainingHours = parseFloat(document.getElementById("remainingHours").value) || 0;
   const remainingMinutes = parseFloat(document.getElementById("remainingMinutes").value) || 0;
   const manualReset = document.getElementById("manualResetToggle").checked;
@@ -472,6 +483,8 @@ document.addEventListener('DOMContentLoaded', () => {
     darkModeToggle.addEventListener("click", () => {
       document.body.classList.toggle("dark-mode");
       document.querySelectorAll(".inputs input").forEach(input => input.classList.toggle("dark-mode"));
+      // persist change
+      saveToLocalStorage();
     });
   }
 
@@ -483,6 +496,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const rday = document.getElementById("resetDay");
       if (rd) rd.disabled = !manualReset;
       if (rday) rday.disabled = manualReset;
+      // persist change
+      saveToLocalStorage();
+      updateDashboard();
     });
   }
 
@@ -506,7 +522,6 @@ document.addEventListener('DOMContentLoaded', () => {
     clearAll.addEventListener("click", () => {
       const setIf = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
       setIf("totalHours", "100");
-      setIf("totalMinutes", "0");
       setIf("remainingHours", "94");
       setIf("remainingMinutes", "25");
       setIf("resetDay", "25");
@@ -515,6 +530,19 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.clear();
     });
   }
+
+  // Auto-save + update on input changes (debounced)
+  document.querySelectorAll('.inputs input').forEach(input => {
+    input.addEventListener('input', () => {
+      clearTimeout(updateTimer);
+      updateTimer = setTimeout(() => {
+        try {
+          saveToLocalStorage();
+        } catch (e) { console.warn('save error', e); }
+        updateDashboard();
+      }, 300);
+    });
+  });
 });
 
 // Load saved values on page load
