@@ -1,0 +1,113 @@
+# Node modules
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Environment / secrets
+.env
+.env.*.local
+.secrets/
+*.pem
+*.key
+*.crt
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / editor
+.vscode/
+.idea/
+*.sublime-*
+*.code-workspace
+
+# Build / output
+dist/
+build/
+out/
+coverage/
+tmp/
+temp/
+
+# Electron build artifacts / installers
+release/
+*.AppImage
+*.exe
+*.msi
+*.dmg
+
+# Docker / images / archives
+docker-image-*.tar
+image-*.tar
+
+# NPM package files (if you don't want to commit)
+*.tgz
+
+# Generated Twemoji assets (copied during postinstall/build)
+assets/twemoji/svg/
+
+# Misc
+*.log.*
+*.seed
+pids/
+.cache/
+```// filepath: d:\Geforce\.gitignore
+# Node modules
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Environment / secrets
+.env
+.env.*.local
+.secrets/
+*.pem
+*.key
+*.crt
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / editor
+.vscode/
+.idea/
+*.sublime-*
+*.code-workspace
+
+# Build / output
+dist/
+build/
+out/
+coverage/
+tmp/
+temp/
+
+# Electron build artifacts / installers
+release/
+*.AppImage
+*.exe
+*.msi
+*.dmg
+
+# Docker / images / archives
+docker-image-*.tar
+image-*.tar
+
+# NPM package files (if you don't want to commit)
+*.tgz
+
+# Generated Twemoji assets (copied during postinstall/build)
+assets/twemoji/svg/
+
+# Misc
+*.log.*
+*.seed

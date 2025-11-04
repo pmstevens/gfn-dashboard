@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GeForce Now Dashboard</title>
+
+  <!-- PWA manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#26a69a">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="dashboard">
+    <!-- Error Message -->
+    <div id="errorMessage" class="error-message"></div>
+
+    <!-- Dark Mode Toggle -->
+    <button id="darkModeToggle" class="dark-mode-toggle">🌙 Dark Mode</button>
+
+    <!-- Show Advanced Settings Button -->
+    <button id="showAdvanced" class="advanced-button">⚙️ Show Advanced Settings</button>
+
+    <!-- Clear All Button -->
+    <button id="clearAll" class="clear-button">🗑️ Clear All</button>
+
+    <!-- Input Fields -->
+    <div class="inputs" id="advancedSettings">
+      <label>
+        <input type="checkbox" id="manualResetToggle" checked> Manual Reset Date
+      </label>
+      <br>
+      <label title="Total hours available (e.g., 100 for 100h, 115 for 115h with rollover)">
+        Total Hours: 
+        <input type="number" id="totalHours" value="100" min="0">
+        <input type="number" id="totalMinutes" value="0" min="0" max="59">
+      </label>
+      <br>
+      <label title="Remaining hours (e.g., 94 for 94h, 94.5 for 94h 30m)">
+        Remaining Hours: 
+        <input type="number" id="remainingHours" value="94" min="0">
+        <input type="number" id="remainingMinutes" value="25" min="0" max="59">
+      </label>
+      <br>
+      <label title="Custom reset day (e.g., 25 for 25th of the month)">
+        Reset Day: 
+        <input type="number" id="resetDay" value="25" min="1" max="31">
+      </label>
+      <br>
+      <label title="Manual reset date (e.g., 2025-11-25)">
+        Reset Date: 
+        <input type="date" id="resetDate" value="2025-11-25" style="width: 150px;">
+      </label>
+    </div>
+
+    <!-- Dynamic Reset Date Display -->
+    <div class="time-display" id="resetDateDisplay">📅 Reset Date: 2025-11-25</div>
+
+    <!-- Progress Bar with Centered Percentage -->
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+      <div class="progress-label" id="progressLabel">0%</div>
+    </div>
+
+    <!-- Used Time -->
+    <div class="time-display" id="usedTime">✅ Used: 20h 35m</div>
+
+    <!-- Remaining Time -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+      <div class="time-display" id="remainingTime">⏳ Remaining: 94h 25m</div>
+
+      <!-- Quick adjust (inline, sits below Remaining Time) -->
+      <div id="quickAdjust" class="quick-adjust-inline" aria-live="polite" title="Quick adjust remaining hours (shortcuts available)">
+        <div class="qa-buttons-inline">
+          <button id="qaMinus60" title="-1h">-1h</button>
+          <button id="qaMinus30" title="-30m">-30m</button>
+          <button id="qaPlus30" title="+30m">+30m</button>
+          <button id="qaPlus60" title="+1h">+1h</button>
+          <button id="qaEdit" title="Edit remaining">✎</button>
+        </div>
+        <div id="qaEditPanel" class="qa-edit" hidden>
+          <input id="qaHours" type="number" min="0" placeholder="h" aria-label="hours" />
+          <input id="qaMinutes" type="number" min="0" max="59" placeholder="m" aria-label="minutes" />
+          <button id="qaSave">Save</button>
+          <button id="qaCancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hours/Day Counter (Hours and Minutes) -->
+    <div class="time-display" id="hoursPerDay">⏳ Max Hours/Day: 4h 30m</div>
+
+    <!-- Countdown Timer -->
+    <div class="countdown" id="countdown">📅 Reset in: 21 days</div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+  </div>
+
+  <!-- prefer local bundling for production; CDN used here for convenience -->
+  <script src="https://unpkg.com/twemoji@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.twemoji) {
+        window.twemoji.parse(document.body, {
+          folder: 'svg',
+          ext: '.svg',
+          attributes: function (icon, options) {
+            return { width: '1em', height: '1em', class: 'emoji' };
+          }
+        });
+      }
+    });
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>

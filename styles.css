@@ -1,0 +1,315 @@
+/* styles.css */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "EmojiOne Color", "Helvetica Neue", Arial, sans-serif;
+  background: #f4f4f4;
+  color: #333;
+  padding: 20px;
+  text-align: center;
+  transition: background 0.3s, color 0.3s;
+}
+
+.dashboard {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.dark-mode {
+  background: #121212;
+  color: #e0e0e0;
+}
+
+/* Theme variables for easy tuning */
+:root{
+  --progress-color: #4caf50;     /* filled bar */
+  --progress-bg: #ddd;          /* empty bar background */
+  --marker-color: rgba(0,0,0,0.65);
+  --marker-glow: 0 0 0 rgba(0,0,0,0);
+  --progress-label-color: #333333; /* default label color for light theme */
+  --emoji-size: 1em; /* adjust to taste: 0.9em, 1.1em, etc. */
+}
+
+.dark-mode{
+  --progress-color: #26a69a;    /* teal for dark mode */
+  --progress-bg: #2b2b2b;       /* darker container so marker is visible */
+  --marker-color: #FFD54F;      /* bright amber marker on dark */
+  --marker-glow: 0 0 8px rgba(255,213,79,0.45);
+  --progress-label-color: #ffffff; /* light label for dark theme */
+}
+
+.dark-mode-toggle {
+  background: #333;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.clear-button {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.inputs {
+  margin-bottom: 20px;
+}
+
+.inputs label {
+  display: block;
+  margin: 10px 0;
+}
+
+.inputs input {
+  width: 60px;
+  margin-left: 5px;
+  padding: 5px;
+  background: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.inputs input.dark-mode {
+  background: #333;
+  color: #fff;
+  border-color: #555;
+}
+
+/* Larger date input */
+#resetDate {
+  width: 150px;
+}
+
+.progress-container {
+  background: var(--progress-bg);
+  width: 100%;
+  height: 30px;
+  border-radius: 15px;
+  overflow: hidden;
+  margin: 20px 0;
+  position: relative;
+}
+
+.progress-bar {
+  background: var(--progress-color);
+  height: 100%;
+  width: 0%;
+  transition: width 0.5s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+/* stronger, glowing marker */
+.month-marker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;                           /* thicker for visibility */
+  background: var(--marker-color);
+  box-shadow: var(--marker-glow);
+  z-index: 6;
+  transform: translateX(-1px);
+  pointer-events: none;
+  transition: left 400ms ease;          /* smooth movement */
+  border-radius: 2px;
+  /* subtle outline to ensure contrast over both light/dark filled areas */
+  outline: 1px solid rgba(255,255,255,0.06);
+}
+
+.progress-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--progress-label-color);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+
+/* When the label sits over a filled (dark) area on light theme */
+.progress-label.on-fill {
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+}
+
+.time-display {
+  font-size: 18px;
+  margin: 10px 0;
+  color: #2c3e50;
+}
+
+.time-display.dark-mode {
+  color: #e0e0e0;
+}
+
+.countdown {
+  font-size: 16px;
+  color: #e74c3c;
+}
+
+.countdown.dark-mode {
+  color: #ff9800;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: none;
+}
+
+#resetDateDisplay {
+  font-size: 16px;
+  margin: 10px 0;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.notification {
+  color: #f1c40f;
+  font-weight: bold;
+  margin-top: 10px;
+  display: none;
+}
+
+#resetDateDisplay {
+  font-size: 16px;
+  margin: 10px 0;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.dark-mode .notification {
+  color: #f1c40f;
+}
+
+.dark-mode #resetDateDisplay {
+  color: #e0e0e0;
+}
+
+.dark-mode #usedTime,
+.dark-mode #remainingTime,
+.dark-mode #hoursPerDay {
+  color: #e0e0e0;
+}
+
+.advanced-button {
+  background: #3498db;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+#advancedSettings {
+  display: none;
+}
+
+/* Month progress marker (customizable via --marker-color) */
+/* .month-marker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--marker-color, rgba(0,0,0,0.85));
+  z-index: 5;
+  transform: translateX(-1px);
+  pointer-events: none;
+  transition: left 400ms ease; /* smooth movement */
+
+
+/* Example color choices */
+/* Light theme: darker marker */
+/* .progress-container { --marker-color: rgba(0,0,0,0.65); } */
+/* Dark theme: bright amber */
+/* .dark-mode .month-marker { --marker-color: rgba(0,0,0,0.85); } */
+
+/* Quick-adjust floating control (non-intrusive) */
+.quick-adjust {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  background: rgba(255,255,255,0.95);
+  color: #222;
+  border: 1px solid rgba(0,0,0,0.08);
+  padding: 8px;
+  border-radius: 8px;
+  z-index: 1000;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  font-size: 13px;
+  min-width: 170px;
+}
+.dark-mode .quick-adjust {
+  background: rgba(18,18,18,0.95);
+  color: #e0e0e0;
+  border-color: rgba(255,255,255,0.04);
+}
+.quick-adjust .qa-display { margin-bottom: 6px; font-weight:600; }
+.quick-adjust .qa-buttons { display:flex; gap:6px; flex-wrap:wrap; justify-content:center; }
+.quick-adjust .qa-buttons button { padding:4px 6px; border-radius:4px; border:1px solid rgba(0,0,0,0.08); cursor:pointer; background:#fff; }
+.dark-mode .qa-buttons button { background:#222; color:#e0e0e0; border-color:rgba(255,255,255,0.04); }
+.quick-adjust .qa-edit { margin-top:6px; display:flex; gap:6px; justify-content:center; align-items:center; }
+.quick-adjust .qa-edit input { width:48px; padding:4px; border-radius:4px; border:1px solid #ccc; }
+.dark-mode .qa-edit input { background:#2b2b2b; border-color:#444; color:#e0e0e0; }
+
+/* Quick-adjust inline control (compact, sits next to remaining time) */
+.quick-adjust-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+margin-bottom: 6px; 
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: rgba(0,0,0,0.04);
+  color: inherit;
+  border: 1px solid rgba(0,0,0,0.06);
+  font-size: 13px;
+}
+.dark-mode .quick-adjust-inline {
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.04);
+}
+
+.qa-display-inline { font-weight:600; margin-right:6px; }
+.qa-buttons-inline { display:flex; gap:6px; align-items:center; }
+.qa-buttons-inline button {
+  padding:3px 6px;
+  border-radius:4px;
+  border:1px solid rgba(0,0,0,0.06);
+  background: #fff;
+  cursor: pointer;
+  font-size:12px;
+}
+.dark-mode .qa-buttons-inline button {
+  background:#222;
+  color:#e0e0e0;
+  border-color:rgba(255,255,255,0.04);
+}
+
+/* Ensure twemoji images match the surrounding text */
+:root { --emoji-size: 1em; }
+img.emoji, .emoji {
+  width: var(--emoji-size) !important;
+  height: var(--emoji-size) !important;
+  display: inline-block;
+  vertical-align: -0.12em;
+  object-fit: contain;
+}

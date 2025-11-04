@@ -1,0 +1,21 @@
+{
+  "name": "gfn-dashboard",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "copy-twemoji": "node copy-twemoji.js",
+    "postinstall": "node copy-twemoji.js"
+  },
+  "devDependencies": {
+    "electron": "^26.6.10"
+  },
+  "description": "",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "twemoji": "^14.0.2"
+  }
+}
